@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Larrisa</title>
+
+
+
+        <style type="text/css">
+            
+            html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            padding: 5px;
+            padding-right: 20px;
+            overflow: hidden;
+        }
+
+        #threejs-container {
+            width: 100vw;          /* largeur souhaitée */
+            height: 100vw;         /* pour garder un carré */
+            max-width: 500px;     /* limite max sur desktop */
+            max-height: 500px;
+            margin: 20px auto;
+            border-radius: 50%;
+         
+            position: relative;
+
+        }
+
+        #threejs-container canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+
+
+
+
+
+            .larissa{
+                
+                color: red;
+                font-size: 18px;
+                border-radius: 20%;
+            }
+
+            .art{
+                padding-left: 20vw;
+            }
+
+            .def_title{
+                padding-left: 5vw;
+                font-weight: 700;
+                font-size: 20px;
+                color: blue;
+            }
+
+            .def_exemple{
+                padding-left: 15vw;
+                font-weight: 700;
+                font-size: 20px;
+                color: blue;
+            }
+            
+
+            .title{
+                color: red;
+                font-size: 25px;
+                font-weight: 800;
+            }
+
+            
+        </style>
+
+</head>
+<body>
+
+	
+
+		<p class="title">Larisométrie</p>
+
+		<p class="def_title">Définition---</p>
+		<p class="def">
+
+			<span class="art">Art</span> de la mésure précise de l'effet que <span class="larissa">Larissa</span> a sur le coeur et l'esprit d'un individu
+			dont chaque battement et chaque pensée est quantifié par son nom
+		</p>
+
+		<span class="def_exemple">Exemple</span>
+
+		<p>Individue souffrant du <span class="larissa">Larissysme</span></p>
+
+		<div id="threejs-container"></div>
+
+</body>
+
+
+<!-- CDN Three.js -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/js/loaders/FontLoader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/js/geometries/TextGeometry.js"></script>
+
+<script>
+
+
+        const container = document.getElementById('threejs-container');
+
+        // Scène
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffffff); // blanc
+
+
+        // Caméra
+        const camera = new THREE.PerspectiveCamera(
+            100,
+            container.clientWidth / container.clientHeight,
+            0.1,
+            100
+        );
+        camera.position.z = 18;
+
+       
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        container.appendChild(renderer.domElement);
+        renderer.setSize(container.clientWidth, container.clientHeight);
+
+        // Lumière
+        const light = new THREE.PointLight(0xffffff, 2, 20);
+        light.position.set(0, 0, 2);
+        scene.add(light);
+
+        // Charger la police
+        const loader = new THREE.FontLoader();
+        loader.load('/font.typeface.json', function(font) {
+
+            // Texte central "infni"
+            const textGeoCenter = new THREE.TextGeometry('larissa', {
+                font: font,
+                size: 2,
+                height: 0,
+            });
+            const textMatCenter = new THREE.MeshBasicMaterial({ color: 0xff0000, metalness: 0.5, roughness: 0.2 });
+
+            const centerText = new THREE.Mesh(textGeoCenter, textMatCenter);
+            scene.add(centerText);
+
+
+            // Texte en orbite "esprit"
+            const textGeoOrbit = new THREE.TextGeometry('esprit', {
+                font: font,
+                size: 2,
+                height: 0,
+            });
+            const textMatOrbit = new THREE.MeshBasicMaterial({ color: 0x0000FF, metalness: 0.5, roughness: 0.2 });
+            const orbitText = new THREE.Mesh(textGeoOrbit, textMatOrbit);
+            scene.add(orbitText);
+
+            centerText.position.x=-4
+            centerText.position.y=5
+            let angle = 0;
+            const radius = 11;
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Orbite autour de "infni"
+                angle += -0.03;
+                orbitText.position.x = radius * Math.cos(angle)-3;
+                orbitText.position.y = radius * Math.sin(angle)+5;
+
+                renderer.render(scene, camera);
+            }
+
+            animate();
+        });
+
+        // Resize responsive
+        window.addEventListener("resize", () => {
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+
+
+
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
